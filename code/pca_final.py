@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Mar  1 23:50:38 2018
 
-@author: Ayush Kumar Pathak
-"""
 from matplotlib import pyplot as plt
 import numpy as np
 from sklearn.preprocessing import StandardScaler
@@ -11,11 +6,6 @@ import csv
 
 try:
     gene = open("gene")
-    
-    
-    
-    
-        
     gendat = []
     for rows in csv.reader(gene):
         rowdat = []
