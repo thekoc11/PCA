@@ -57,46 +57,88 @@ def partition(alist, c, first, last):
     return rightmark
 
 
+data = []
+rlen = 0
+timedata = []
+trlen = 0
 
-X = array([[1., 2., 3.], [4., 5., 6.]])
-Z = []
+try:
+    with open('gene.csv', 'rb') as csvfile:
+        datareader = csv.reader(csvfile)
+        for row in datareader:
+            data.append(row)
+            rlen = len(row)
 
-xbar = mean(X, axis=0, dtype=np.float32)
-sigma = std(X, axis=0, dtype=np.float32)
+    for i in range(len(data)):
+        for j in range(rlen):
+            data[i][j] = float(data[i][j])
 
-for row in X:
-    row = row - xbar
-    for i in range(len(row)):
-        row[i] = row[i]/sigma[i]
-    Z.append(row)
+    print(len(data), rlen)
 
-Z = array(Z)
-Zt = transpose(Z)
+    with open('Meta.csv', 'rb') as csvfile:
+        datareader = csv.reader(csvfile)
+        for row in datareader:
+            timedata.append(row)
+            trlen = len(row)
 
-M = Zt.dot(Z)
+    for i in range(len(timedata)):
+        for j in range(trlen):
+            timedata[i][j] = float(timedata[i][j])
 
-d, P = eig(M)
-D = diag(d)
-Pinv = inv(P)
-max = d[0]
 
-# test = array([31,26,20,17,44,77,55,93])
-c = np.arange(len(d))
-# print(d)
-# print(c)
+    print(len(timedata), trlen)
 
-quickSort(d, c)
 
-# print(d)
-# print(c)
-Pstar = []
+    X = array(data)
+    Y = array(timedata)
+    Z = []
 
-for i in range(len(P)):
-    Pstar.append(P[c[i]])
+    xbar = mean(X, axis=0, dtype=np.float32)
+    sigma = std(X, axis=0, dtype=np.float32)
 
-Dp = diag(d)
-Pstar = array(Pstar)
+    for row in X:
+        row = row - xbar
+        for i in range(len(row)):
+            row[i] = row[i]/sigma[i]
+        Z.append(row)
 
-Zstar = Z.dot(Pstar)
+    Z = array(Z)
+    Zt = transpose(Z)
 
-print (Zstar[0])
+    M = Zt.dot(Z)
+
+    d, P = eig(M)
+    D = diag(d)
+    Pinv = inv(P)
+    max = d[0]
+
+    # test = array([31,26,20,17,44,77,55,93])
+    c = np.arange(len(d))
+    # print(d)
+    # print(c)
+
+    quickSort(d, c)
+
+    # print(d)
+    # print(c)
+    Pstar = []
+
+    for i in range(len(P)):
+        Pstar.append(P[c[i]])
+
+    Dp = diag(d)
+    Pstar = array(Pstar)
+
+    Zstar = Z.dot(Pstar)
+
+    # print (Zstar)
+
+    pc1 = Zstar[0]
+    pc2 = Y
+
+    with plt.style.context('seaborn-whitegrid'):
+        plt.scatter(pc1, pc2)
+        plt.tight_layout()
+        plt.show()
+except:
+    print("Wrong Format!")
